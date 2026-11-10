@@ -8,6 +8,16 @@
 <style>html.rf-pending .mixed-title{visibility:hidden}</style>
 <meta name="description" content="아키타입 스튜디오 — 유튜브 콘텐츠 전문 제작 스튜디오. 26개 채널 제작·운영, 방송·OTT·광고·MV·뮤지컬·영화·사진.">
 <meta name="theme-color" content="#1A1A1A">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://studioarchetype.kr/">
+<meta property="og:site_name" content="ARCHETYPE STUDIO">
+<meta property="og:title" content="ARCHETYPE STUDIO · 아키타입 스튜디오">
+<meta property="og:description" content="경계 없는 영상 콘텐츠를 만드는 창작 제작소">
+<meta property="og:image" content="https://studioarchetype.kr/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://studioarchetype.kr/img/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo+Narrow:wght@400;500;700&family=JetBrains+Mono:wght@300;400;500;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=DM+Serif+Display&family=Bebas+Neue&family=Anton&family=Playfair+Display:wght@900&family=Bungee+Inline&family=Major+Mono+Display&family=Abril+Fatface&family=Rubik+Mono+One&family=Inconsolata:wght@300;500&family=Audiowide&family=Oswald:wght@500;700&family=Russo+One&family=Cinzel:wght@600;700&family=Press+Start+2P&family=Special+Elite&family=VT323&family=Big+Shoulders+Display:wght@800;900&display=swap" rel="stylesheet">
@@ -1181,6 +1191,8 @@ html{scroll-padding-top:58px}
 .mob a{color:#F5F5F5;text-decoration:none;font-family:var(--f-archivo);font-size:clamp(30px,9vw,44px);line-height:1.15;text-transform:uppercase;display:flex;align-items:baseline;gap:14px;border-bottom:.5px solid rgba(245,245,245,.18);padding:8px 0}
 .mob .mi{font-family:var(--f-mono);font-size:10px;letter-spacing:.2em;opacity:.5}
 .mob .mail{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:none;border:0;margin-top:22px;opacity:.7}
+/* mobile menu — random typeface per item, re-drawn on every visit (see script at end) */
+.mob a .mi{font-style:normal;font-weight:400;text-transform:none;letter-spacing:.2em}
 .sheet{padding-top:92px}
 /* buttons */
 .site-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:4px}
@@ -1948,5 +1960,45 @@ body::before{opacity:.65}
 })();
 </script>
 
+<script>
+/* mobile menu: random typeface per item on every visit */
+(function(){
+  var pool=[
+    {f:"'Archivo Black',sans-serif",s:1},
+    {f:"'Playfair Display',serif",w:900,i:1,t:'none',s:1.05},
+    {f:"'Bebas Neue',sans-serif",s:1.3,ls:'.02em'},
+    {f:"'Anton',sans-serif",s:1.15},
+    {f:"'DM Serif Display',serif",t:'none',s:1.08},
+    {f:"'Rubik Mono One',monospace",s:.8},
+    {f:"'Big Shoulders Display',sans-serif",w:900,s:1.25},
+    {f:"'Abril Fatface',serif",s:1},
+    {f:"'Bungee Inline',sans-serif",s:.85},
+    {f:"'Audiowide',sans-serif",s:.9},
+    {f:"'Oswald',sans-serif",w:700,s:1.15},
+    {f:"'Russo One',sans-serif",s:.95},
+    {f:"'Cinzel',serif",w:700,s:.95},
+    {f:"'Major Mono Display',monospace",t:'none',s:.8},
+    {f:"'Special Elite',monospace",s:.95},
+    {f:"'VT323',monospace",s:1.35},
+    {f:"'Press Start 2P',monospace",s:.6}
+  ];
+  for(var i=pool.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),x=pool[i];pool[i]=pool[j];pool[j]=x}
+  var items=document.querySelectorAll('.mob a:not(.mail)');
+  function apply(){
+    var base=Math.max(30,Math.min(44,window.innerWidth*0.09));
+    items.forEach(function(a,k){
+      var p=pool[k%pool.length],st=a.style;
+      st.fontFamily=p.f;st.fontWeight=p.w||400;st.fontStyle=p.i?'italic':'normal';
+      st.textTransform=p.t||'uppercase';st.letterSpacing=p.ls||'normal';st.lineHeight='1.08';
+      var size=base*p.s;st.fontSize=size+'px';
+      var n=0;while(a.scrollWidth>a.clientWidth+1&&n++<30){size*=0.94;st.fontSize=size+'px'}
+    });
+  }
+  apply();
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(apply);
+  var mob=document.querySelector('.mob');
+  if(mob&&window.MutationObserver)new MutationObserver(function(){if(mob.classList.contains('open'))apply()}).observe(mob,{attributes:true,attributeFilter:['class']});
+})();
+</script>
 </body>
 </html>
